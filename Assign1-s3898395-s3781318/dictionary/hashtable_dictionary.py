@@ -85,6 +85,7 @@ class HashTableDictionary(BaseDictionary):
         auto_complete_words = []
         tmp_dict = self.this_dict.copy()
         for x in range(3):
+            found = False
             highest_frequency = 0
             most_frequent = ""
             for word_in_dict in tmp_dict:
@@ -92,10 +93,14 @@ class HashTableDictionary(BaseDictionary):
                     if tmp_dict.get(word_in_dict) > highest_frequency:
                         highest_frequency = tmp_dict.get(word_in_dict)
                         most_frequent = word_in_dict
-            word_frequency = WordFrequency(most_frequent, highest_frequency)
-            auto_complete_words.append(word_frequency)
-            # FIX THIS PART LATER
-            del tmp_dict[most_frequent]            
+                        found = True
+            if (found == True):          
+                del tmp_dict[most_frequent]
+                word_frequency = WordFrequency(most_frequent, highest_frequency)
+                auto_complete_words.append(word_frequency)
+            
+            
+                  
 
 
 
