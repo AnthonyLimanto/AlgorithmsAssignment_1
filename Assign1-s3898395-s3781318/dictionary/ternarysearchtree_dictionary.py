@@ -1,5 +1,3 @@
-
-from pkg_resources import working_set
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 from dictionary.node import Node
@@ -15,16 +13,19 @@ from dictionary.node import Node
 
 class TernarySearchTreeDictionary(BaseDictionary):
 
+    def __init__(self):
+        self.root = None
+
     def build_dictionary(self, words_frequencies: [WordFrequency]):
         """
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
-        self.root = None
         # TO BE IMPLEMENTED
+        self.root = None
+
         for words in words_frequencies:
             self.add_word_frequency(words)
-
 
 
     def search(self, word: str) -> int:
@@ -33,14 +34,9 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
-        # TO BE IMPLEMENTED
-        node = self._search(self.root, word, 0)
-        if node == None:
-            return 0
-        
-
+        searchRes = self._search(self.root, word)
         # place holder for return
-        return node.frequency
+        return searchRes
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
         """
@@ -49,13 +45,8 @@ class TernarySearchTreeDictionary(BaseDictionary):
         :return: True whether succeeded, False when word is already in the dictionary
         """
         # TO BE IMPLEMENTED
-            
-        if self.search(word_frequency.word) == 0:
-            return False
-            
-        self.root = self.insert(self.root, word_frequency.word, word_frequency.frequency, 0)
-
-        # use search to if is in dict already
+        print("NEW WORD")
+        self.root = self.insert(self.root, word_frequency.word, word_frequency.frequency, False)
         # place holder for return
         return True
 
@@ -66,6 +57,7 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @return: whether succeeded, e.g. return False when point not found
         """
         # TO BE IMPLEMENTED
+        #self._search(self.root), word)
         # place holder for return
         return False
 
@@ -79,44 +71,50 @@ class TernarySearchTreeDictionary(BaseDictionary):
         # place holder for return
         return []
 
-
-    # I put this here
-    def insert(self, root, string, frequency, index):
-
-        char = string[index]
-
-        if root is None:
-            root = Node(letter= char)
-
-        if char < root.letter:
-            root.left = self.insert(root.left, string, frequency, index)
-        
-        elif char > root.letter:
-            root.right = self.insert(root.right, string, frequency, index)
-
-        elif index < len(string) - 1:
-            root.middle = self.insert(root.middle, string, frequency, index + 1)
-        else:
-            root.frequency = frequency
-            root.end_word = True
-
-        return root
-    
-    # i put this here
-    def _search(self, node, string, index):
-
-        if node == None:
-            return None
-
-        char = string[index]
-
-        if char < node.letter:
-            node.left = self._search(node.left, string, index)
-        
-        elif char > node.letter:
-            node.right = self._search(node.right, string, index)
-
-        elif index < len(string) - 1:
-            node.middle = self._search(node.middle, string, index + 1)
-        else:
+    def insert(self, node, word, frequency, end_word): # Might be overwriting end_word field
+        if len(word) == 0:
             return node
+        
+        head = word[0]
+        tail = word[1:]
+        if len(word) == 1:
+            end_word = True
+
+        if node is None:
+            node = Node(head, frequency, end_word)
+            print(node.letter, node.frequency, node.end_word, node) 
+        
+        if head < node.letter:
+            node.left = self.insert(node.left, word, frequency, end_word)
+        elif head > node.letter:
+            node.right = self.insert(node.left, word, frequency, end_word)
+        else:
+            if len(tail) == 0 :
+                end_word = True
+            else : 
+                node.middle = self.insert(node.middle, tail, frequency, end_word)
+        
+        return node
+
+    def _search(self, node : Node, word): # Finds freq but then does backwards funky stuff and returns none each time until it rebuilds the word :D
+        print("START SEARCH")
+
+        if node == None or len(word) == 0:
+            return 0
+        
+        head = word[0]
+        tail = word[1:]
+
+        if head < node.letter:
+            self._search(node.left, word)
+        elif head > node.letter:
+            self._search(node.right, word)
+        else:
+            if head == node.letter:
+                if len(tail) == 0: #and node.end_word == True
+                    retVal = node.frequency
+                    print("SEARCH: ",retVal)
+                    return retVal
+                else:
+                    print("MIDDLE")
+                    self._search(node.middle, tail)
