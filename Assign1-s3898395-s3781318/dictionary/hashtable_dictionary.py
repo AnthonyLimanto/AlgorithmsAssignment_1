@@ -18,7 +18,7 @@ class HashTableDictionary(BaseDictionary):
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
-        # TO BE IMPLEMENTED
+
         self.this_dict = {}
         for words in words_frequencies:
             self.this_dict[words.word] = words.frequency
@@ -32,7 +32,6 @@ class HashTableDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
-        # TO BE IMPLEMENTED
 
         freq = 0
         if word in self.this_dict:
@@ -40,11 +39,7 @@ class HashTableDictionary(BaseDictionary):
             return freq
         else:
             return 0
-        
-
-
-        # place holder for return
-        
+                
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
         """
@@ -52,8 +47,7 @@ class HashTableDictionary(BaseDictionary):
         @param word_frequency: (word, frequency) to be added
         :return: True whether succeeded, False when word is already in the dictionary
         """
-        # TO BE IMPLEMENTED
-        # place holder for return
+
         if word_frequency.word in self.this_dict:
             return False
         
@@ -67,21 +61,20 @@ class HashTableDictionary(BaseDictionary):
         @param word: word to be deleted
         @return: whether succeeded, e.g. return False when point not found
         """
-        # TO BE IMPLEMENTED
 
         if word in self.this_dict:
             self.this_dict.pop(word)
             return True
-        # place holder for return
+
         return False
 
-    def autocomplete(self, word: str) -> [str]:
+    def autocomplete(self, prefix_word: str) -> [WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
         @param word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'word'
         """
-        # TO BE IMPLEMENTED
+
         auto_complete_words = []
         tmp_dict = self.this_dict.copy()
         for x in range(3):
@@ -89,7 +82,7 @@ class HashTableDictionary(BaseDictionary):
             highest_frequency = 0
             most_frequent = ""
             for word_in_dict in tmp_dict:
-                if word_in_dict.startswith(word):
+                if word_in_dict.startswith(prefix_word):
                     if tmp_dict.get(word_in_dict) > highest_frequency:
                         highest_frequency = tmp_dict.get(word_in_dict)
                         most_frequent = word_in_dict
@@ -99,11 +92,4 @@ class HashTableDictionary(BaseDictionary):
                 word_frequency = WordFrequency(most_frequent, highest_frequency)
                 auto_complete_words.append(word_frequency)
             
-            
-                  
-
-
-
-
-        # place holder for return
         return auto_complete_words

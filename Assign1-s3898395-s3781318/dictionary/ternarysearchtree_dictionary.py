@@ -1,3 +1,4 @@
+from pickle import TRUE
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 from dictionary.node import Node
@@ -33,8 +34,11 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
+        #print("SEARCH CALLED FOR: ", word)
         result = 0
         result = self._search(self.root, word, 0)
+
+        #print("WORD FREQ WAS: ", result)
 
         return result
 
@@ -44,11 +48,9 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word_frequency: (word, frequency) to be added
         :return: True whether succeeded, False when word is already in the dictionary
         """
-
-        #print("NEW WORD")
+        #print("ADD CALLED FOR: ", word_frequency.word)
         result = 0
         result = self._search(self.root, word_frequency.word, 0)
-        #print("ADD SEARCH RESULT: ", result, "FOR WORD: ", word_frequency.word)
 
         if result == 0:
             self.root = self.insert(self.root, word_frequency.word, word_frequency.frequency, 0)
@@ -63,18 +65,31 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: word to be deleted
         @return: whether succeeded, e.g. return False when point not found
         """
-        # TO BE IMPLEMENTED
-        #self._search(self.root), word)
-        # place holder for return
-        return False
 
-    def autocomplete(self, word: str) -> [str]:
+        #print("DELETE CALLED FOR: ", word)
+        if self.search(word) == 0:
+            #print("WORD NOT THERE")
+            return False
+        else:
+            self.root = self._delete(self.root, word, 0)
+            if self.search(word) == 0:
+                #print("WORD SUCCESFULLY DELETED")
+                return True
+            else:
+                #print("WORD UNSUCCESFULLY DELETED")
+                return False
+
+    def autocomplete(self, prefix_word: str) -> [WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'word' as a prefix
         @param word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'word'
         """
-        # TO BE IMPLEMENTED
+        
+        #print("AC CALLED:")
+        #for s in self._autocomplete(self.root, prefix_word):
+            #print(s.letter, s.frequency)
+
         # place holder for return
         return []
 
@@ -104,11 +119,11 @@ class TernarySearchTreeDictionary(BaseDictionary):
     def _search(self, node : Node, string, index) -> int:
 
         char = string[index]
-
-        #print("SEARCH AT NODE: ", char)
         
         if node == None:
             return 0
+
+        #print("SEARCH AT NODE: ", node.letter, " FOR CHAR: ", char)
 
         if char < node.letter:
             #print("GOING LEFT")
@@ -116,7 +131,6 @@ class TernarySearchTreeDictionary(BaseDictionary):
         
         elif char > node.letter:
             #print("GOING RIGHT")
-
             return self._search(node.right, string, index)
 
         elif index < len(string) - 1:
@@ -130,3 +144,85 @@ class TernarySearchTreeDictionary(BaseDictionary):
                 result = 0
             #print("METHOD'S RESULT: ", result)
             return result
+
+    
+    def _delete(self, node : Node, string, index):
+        
+        char = string[index]
+
+        if node == None:
+            #print("DELETE NODE NOT FOUND")
+            return None
+
+        #print("AT NODE: ", node.letter, "FOR CHAR: ", char)
+
+        children = self.countChildren(node)
+        #print("CHILDREN OF ", char, " : ", children)
+
+        if char < node.letter:
+            #print("GOING LEFT")
+            node.left =  self._delete(node.left, string, index)
+        elif char > node.letter:
+            #print("GOING RIGHT")
+            node.right = self._delete(node.right, string, index)
+        else:
+            if index < len(string) - 1:
+                #print("GOING MIDDLE")
+                node.middle = self._delete(node.middle, string, index + 1)
+            elif node.end_word == True:
+                node.frequency = None
+                node.end_word = False
+                #print("NODE END SET FALSE, HAS CHILDREN")
+            else:
+                return None
+
+        if (children != self.countChildren(node) and children == 1 and node.end_word == False):
+            #print("NODE DELETED, NO CHILDREN")
+            return None
+
+        return node
+
+    
+    def countChildren(self, node : Node) -> int:
+        count = 0
+        if (node.left != None):
+            count += 1
+        if (node.right != None):
+            count += 1
+        if (node.middle != None):
+            count += 1
+
+        return count
+
+
+    def _autocomplete(self, node : Node, string):
+        if node == None or len(string) == 0:
+            return []
+        
+        head = string[0]
+        tail = string[1:]
+
+        if head < node.letter:
+            return self._autocomplete(node.left, string)
+        elif head > node.letter:
+            return self._autocomplete(node.right, string)
+        else:
+            if len(tail) == 0:
+                return self._suffixSearch(node.middle)
+            return self._autocomplete(node.middle, tail)
+
+
+    def _suffixSearch(self, node : Node):
+        if node != None:
+            if node.end_word == True:
+                yield node
+        
+        if node.left:
+            for s in self._suffixSearch(node.left):
+                yield s
+        if node.right:
+            for s in self._suffixSearch(node.right):
+                yield s
+        if node.middle:
+            for s in self._suffixSearch(node.middle):
+                yield s

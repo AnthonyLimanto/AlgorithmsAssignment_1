@@ -40,7 +40,7 @@ class BaseDictionary:
         """
         pass
 
-    def autocomplete(self, prefix_word: str) -> [str]:
+    def autocomplete(self, prefix_word: str) -> [WordFrequency]:
         """
         return a list of 3 most-frequent words in the dictionary that have 'prefix_word' as a prefix
         @param prefix_word: word to be autocompleted

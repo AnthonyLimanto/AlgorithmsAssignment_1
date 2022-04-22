@@ -16,7 +16,7 @@ class ListDictionary(BaseDictionary):
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
-        # TO BE IMPLEMENTED
+
         self.list_dict = []
         for words in words_frequencies:
             tmp = WordFrequency(words.word, words.frequency)
@@ -30,7 +30,6 @@ class ListDictionary(BaseDictionary):
         """
         freq = 0
 
-        # TO BE IMPLEMENTED
         for i in range(len(self.list_dict)):
             if self.list_dict[i].word == word:
                 freq = self.list_dict[i].frequency
@@ -44,7 +43,7 @@ class ListDictionary(BaseDictionary):
         :return: True whether succeeded, False when word is already in the dictionary
         """
         found = False
-        # TO BE IMPLEMENTED
+
         for i in range(len(self.list_dict)):
             if self.list_dict[i].word == word_frequency.word:
                 found = True
@@ -64,7 +63,7 @@ class ListDictionary(BaseDictionary):
         """
         found = False
         targIndex = None
-        # TO BE IMPLEMENTED
+
         for i in range(len(self.list_dict)):
             if self.list_dict[i].word == word:
                 found = True
@@ -84,7 +83,7 @@ class ListDictionary(BaseDictionary):
         """
         auto_complete_list = []
         tmp_dict = self.list_dict.copy()
-        # TO BE IMPLEMENTED
+
         for x in range(3):
             found = False
             highest_index = 0
@@ -102,5 +101,4 @@ class ListDictionary(BaseDictionary):
                 auto_complete_list.append(wf_list)
                 tmp_dict.pop(highest_index)
 
-        # place holder for return
         return auto_complete_list
