@@ -85,13 +85,40 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'word'
         """
-        
-        #print("AC CALLED:")
-        #for s in self._autocomplete(self.root, prefix_word):
-            #print(s.letter, s.frequency)
+        print("NEW")
+        tmp_auto_complete_list = []
+        auto_complete_list = []
 
-        # place holder for return
-        return []
+
+        # Search for suffixes
+        for word in self._autocomplete(self.root, prefix_word):
+            wf = WordFrequency(prefix_word + word, self._search(self.root, prefix_word + word, 0))
+            tmp_auto_complete_list.append(wf)
+
+        # Check if whole word is there
+        if self._search(self.root, prefix_word, 0) > 0:
+            wf = WordFrequency(prefix_word, self._search(self.root, prefix_word, 0))
+            tmp_auto_complete_list.append(wf)
+
+        # Find th
+        for x in range(3):
+            found = False
+            highest_index = 0
+            highest_freq = 0
+            highest_word = ""
+            for i in range(len(tmp_auto_complete_list)):
+                if tmp_auto_complete_list[i].frequency > highest_freq:
+                    found = True
+                    highest_index = i
+                    highest_freq = tmp_auto_complete_list[i].frequency
+                    highest_word = tmp_auto_complete_list[i].word
+            if found == True:
+                wf_list = WordFrequency(highest_word, highest_freq)
+                auto_complete_list.append(wf_list)
+                if tmp_auto_complete_list:
+                    tmp_auto_complete_list.pop(highest_index)
+
+        return auto_complete_list
 
 
     def insert(self, root, string, frequency, index):
@@ -198,7 +225,6 @@ class TernarySearchTreeDictionary(BaseDictionary):
     def _autocomplete(self, node : Node, string):
         if node == None or len(string) == 0:
             return []
-        
         head = string[0]
         tail = string[1:]
 
@@ -215,14 +241,14 @@ class TernarySearchTreeDictionary(BaseDictionary):
     def _suffixSearch(self, node : Node):
         if node != None:
             if node.end_word == True:
-                yield node
+                yield node.letter
         
         if node.left:
-            for s in self._suffixSearch(node.left):
-                yield s
+            for word in self._suffixSearch(node.left):
+                yield word
         if node.right:
-            for s in self._suffixSearch(node.right):
-                yield s
+            for word in self._suffixSearch(node.right):
+                yield word
         if node.middle:
-            for s in self._suffixSearch(node.middle):
-                yield s
+            for word in self._suffixSearch(node.middle):
+                yield node.letter + word
