@@ -1,7 +1,7 @@
 from dictionary.word_frequency import WordFrequency
 from dictionary.base_dictionary import BaseDictionary
 
-
+import time
 # ------------------------------------------------------------------------
 # This class is required TO BE IMPLEMENTED. List-based dictionary implementation.
 #
@@ -33,7 +33,6 @@ class ListDictionary(BaseDictionary):
         for i in range(len(self.list_dict)):
             if self.list_dict[i].word == word:
                 freq = self.list_dict[i].frequency
-
         return freq
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:

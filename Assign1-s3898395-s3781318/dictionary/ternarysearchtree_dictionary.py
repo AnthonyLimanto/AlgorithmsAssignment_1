@@ -1,9 +1,8 @@
-from pickle import TRUE
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 from dictionary.node import Node
 
-
+import time
 # ------------------------------------------------------------------------
 # This class is required to be implemented. Ternary Search Tree implementation.
 #
@@ -34,12 +33,8 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
-        #print("SEARCH CALLED FOR: ", word)
         result = 0
         result = self._search(self.root, word, 0)
-
-        #print("WORD FREQ WAS: ", result)
-
         return result
 
     def add_word_frequency(self, word_frequency: WordFrequency) -> bool:
@@ -48,7 +43,6 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word_frequency: (word, frequency) to be added
         :return: True whether succeeded, False when word is already in the dictionary
         """
-        #print("ADD CALLED FOR: ", word_frequency.word)
         result = 0
         result = self._search(self.root, word_frequency.word, 0)
 
@@ -66,17 +60,13 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @return: whether succeeded, e.g. return False when point not found
         """
 
-        #print("DELETE CALLED FOR: ", word)
         if self.search(word) == 0:
-            #print("WORD NOT THERE")
             return False
         else:
             self.root = self._delete(self.root, word, 0)
             if self.search(word) == 0:
-                #print("WORD SUCCESFULLY DELETED")
                 return True
             else:
-                #print("WORD UNSUCCESFULLY DELETED")
                 return False
 
     def autocomplete(self, prefix_word: str) -> [WordFrequency]:
@@ -85,7 +75,6 @@ class TernarySearchTreeDictionary(BaseDictionary):
         @param word: word to be autocompleted
         @return: a list (could be empty) of (at most) 3 most-frequent words with prefix 'word'
         """
-        print("NEW")
         tmp_auto_complete_list = []
         auto_complete_list = []
 
@@ -150,26 +139,19 @@ class TernarySearchTreeDictionary(BaseDictionary):
         if node == None:
             return 0
 
-        #print("SEARCH AT NODE: ", node.letter, " FOR CHAR: ", char)
-
         if char < node.letter:
-            #print("GOING LEFT")
             return self._search(node.left, string, index)
         
         elif char > node.letter:
-            #print("GOING RIGHT")
             return self._search(node.right, string, index)
 
         elif index < len(string) - 1:
-            #print("GOING MIDDLE")
             return self._search(node.middle, string, index + 1)
         else:
-            #print("NODE FREQUENCY: ", node.frequency)
             if node.frequency != None:
                 result = node.frequency
             else:
                 result = 0
-            #print("METHOD'S RESULT: ", result)
             return result
 
     
@@ -178,33 +160,25 @@ class TernarySearchTreeDictionary(BaseDictionary):
         char = string[index]
 
         if node == None:
-            #print("DELETE NODE NOT FOUND")
             return None
 
-        #print("AT NODE: ", node.letter, "FOR CHAR: ", char)
 
         children = self.countChildren(node)
-        #print("CHILDREN OF ", char, " : ", children)
 
         if char < node.letter:
-            #print("GOING LEFT")
             node.left =  self._delete(node.left, string, index)
         elif char > node.letter:
-            #print("GOING RIGHT")
             node.right = self._delete(node.right, string, index)
         else:
             if index < len(string) - 1:
-                #print("GOING MIDDLE")
                 node.middle = self._delete(node.middle, string, index + 1)
             elif node.end_word == True:
                 node.frequency = None
                 node.end_word = False
-                #print("NODE END SET FALSE, HAS CHILDREN")
             else:
                 return None
 
         if (children != self.countChildren(node) and children == 1 and node.end_word == False):
-            #print("NODE DELETED, NO CHILDREN")
             return None
 
         return node

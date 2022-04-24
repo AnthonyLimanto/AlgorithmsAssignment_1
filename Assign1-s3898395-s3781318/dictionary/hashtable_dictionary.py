@@ -1,9 +1,8 @@
-
 from dictionary import word_frequency
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
-
+import time
 # ------------------------------------------------------------------------
 # This class is required TO BE IMPLEMENTED. Hash-table-based dictionary.
 #
@@ -18,7 +17,6 @@ class HashTableDictionary(BaseDictionary):
         construct the data structure to store nodes
         @param words_frequencies: list of (word, frequency) to be stored
         """
-
         self.this_dict = {}
         for words in words_frequencies:
             self.this_dict[words.word] = words.frequency
@@ -32,7 +30,6 @@ class HashTableDictionary(BaseDictionary):
         @param word: the word to be searched
         @return: frequency > 0 if found and 0 if NOT found
         """
-
         freq = 0
         if word in self.this_dict:
             freq = self.this_dict.get(word)
@@ -52,7 +49,7 @@ class HashTableDictionary(BaseDictionary):
             return False
         
         self.this_dict[word_frequency.word] = word_frequency.frequency
-
+        
         return True
 
     def delete_word(self, word: str) -> bool:
