@@ -2,7 +2,7 @@ from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 from dictionary.node import Node
 
-import time
+
 # ------------------------------------------------------------------------
 # This class is required to be implemented. Ternary Search Tree implementation.
 #

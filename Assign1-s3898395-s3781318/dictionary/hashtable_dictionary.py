@@ -2,7 +2,7 @@ from dictionary import word_frequency
 from dictionary.base_dictionary import BaseDictionary
 from dictionary.word_frequency import WordFrequency
 
-import time
+
 # ------------------------------------------------------------------------
 # This class is required TO BE IMPLEMENTED. Hash-table-based dictionary.
 #

@@ -1,7 +1,7 @@
 from dictionary.word_frequency import WordFrequency
 from dictionary.base_dictionary import BaseDictionary
 
-import time
+
 # ------------------------------------------------------------------------
 # This class is required TO BE IMPLEMENTED. List-based dictionary implementation.
 #

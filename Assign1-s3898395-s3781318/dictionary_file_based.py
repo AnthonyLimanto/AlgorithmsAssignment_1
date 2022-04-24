@@ -6,7 +6,7 @@ from dictionary.list_dictionary import ListDictionary
 from dictionary.hashtable_dictionary import HashTableDictionary
 from dictionary.ternarysearchtree_dictionary import TernarySearchTreeDictionary
 
-import time
+
 # -------------------------------------------------------------------
 # DON'T CHANGE THIS FILE.
 # This is the entry point to run the program in file-based mode.
@@ -76,10 +76,8 @@ if __name__ == '__main__':
             command = command_values[0]
             # search
             if command == 'S':
-                print("TIME 1: ", time.time_ns())
                 word = command_values[1]
                 search_result = agent.search(word)
-                print("TIME 2: ", time.time_ns())
                 if search_result > 0:
                     output_file.write(f"Found '{word}' with frequency {search_result}\n")
                 else:
