@@ -9,7 +9,7 @@ import random as rd
 
 # program randomly makes data sets in increasing size, a little slow but its is manageable
 # use by entering in the terminal
-# python3 Data_Generator.py sampleData200k
+# python3 Data_Generator.py sampleData200k.txt
 
 
 if __name__ == '__main__':
